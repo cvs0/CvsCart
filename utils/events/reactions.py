@@ -1,5 +1,6 @@
 import discord
 
+from config.config import 
 from utils.cartItem import CartItem
 
 async def handle_reactions(payload, user_cart_manager, products, bot):
@@ -13,7 +14,6 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
         user_id = payload.user_id
         cart = user_cart_manager.get_cart(user_id)
         total = cart.calculate_total()
-         = "convexshop@proton.me"
         embed = discord.Embed(title="Payment",
                               description=f"Please send ${total} USD to the following email address:\n\n{}\n\nMake sure to use the 'Send money to friends and family' option.\n\nDon't forget to include your email associated with your payment account below.",
                               color=0x00ff00)
