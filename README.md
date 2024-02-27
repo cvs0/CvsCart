@@ -21,7 +21,7 @@ CvsCart is a Discord bot that allows users to manage a shopping cart directly wi
 3. Set up your environment variables.
     * **Windows:** `setx BOT_TOKEN 'your_bot_token'`
     * **Linux:** `EXPORT BOT_TOKEN="your_bot_token"`
-4. Then repeat step 5 for your API url. (if you have one)
+4. Then repeat step 3 for your API url. (if you have one)
 5. Run the bot: `python main.py`
 
 ## Roadmap
