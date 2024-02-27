@@ -1,5 +1,6 @@
 import discord
 
+from config.config import paypal_email
 from utils.cartItem import CartItem
 
 async def handle_reactions(payload, user_cart_manager, products, bot):
@@ -13,7 +14,6 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
         user_id = payload.user_id
         cart = user_cart_manager.get_cart(user_id)
         total = cart.calculate_total()
-        paypal_email = "convexshop@proton.me"
         embed = discord.Embed(title="Pay with PayPal",
                               description=f"Please send ${total} USD to the following PayPal email address:\n\n{paypal_email}\n\nMake sure to use the 'Send money to friends and family' option.\n\nDon't forget to include your email associated with your PayPal account below.",
                               color=0x00ff00)

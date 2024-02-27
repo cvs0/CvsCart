@@ -15,6 +15,8 @@ def bot_help_command(bot):
         embed.add_field(name="!cart", value="View your cart.", inline=False)
         embed.add_field(name="!purge <amount>", value="Purge a certain amount of messages.", inline=False)
         embed.add_field(name="!clearcart", value="Clear your cart.", inline=False)
+        embed.add_field(name="!clearproducts", value="Clears all the products.", inline=False)
+        embed.add_field(name="!fixreactions", value="Fixes the reactions of products", inline=False)
         embed.add_field(name="!finalize-purchase <user_id> <customer_paypal_email>", value="Finalize a purchase for a user.", inline=False)
         embed.add_field(name="!setstatus <status_type> <status_text>", value="Status types: watching, playing, listening.")
 
