@@ -18,8 +18,21 @@ CvsCart is a Discord bot that allows users to manage a shopping cart directly wi
 
 1. Clone the repository.
 2. Install the required dependencies: `pip install -r requirements.txt`
-3. Set up your environment variables. See `config/.env.example` for an example.
-4. Run the bot: `python main.py`
+3. Set up your environment variables.
+    * **Windows:** `setx BOT_TOKEN 'your_bot_token'`
+    * **Linux:** `EXPORT BOT_TOKEN="your_bot_token"`
+4. Then repeat step 5 for your API url. (if you have one)
+5. Run the bot: `python main.py`
+
+## Roadmap
+* Multi-server support
+* Better config
+* Better security
+* Web panel support
+* DB support
+* Bug fixes
+* More commands..
+* More features..
 
 ## Contributing
 
