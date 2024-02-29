@@ -31,10 +31,13 @@ with open('products.txt', 'r') as file:
         if len(parts) >= 6:
             stock_limit = parts[5].lower() == 'true'
         if len(parts) >= 7 and parts[6].strip():  # Check if parts[6] is not empty
-            try:
-                stock_amount = int(parts[6])
-            except ValueError:
-                print(f"Invalid stock_amount value: {parts[6]}")
+            if parts[6].strip().lower() == 'unlimited':
+                stock_amount = None
+            else:
+                try:
+                    stock_amount = int(parts[6])
+                except ValueError:
+                    print(f"Invalid stock_amount value: {parts[6]}")
         products[int(message_id)] = {
             "name": name,
             "price": float(price),

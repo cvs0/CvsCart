@@ -49,7 +49,7 @@ def make_item_command(bot, products):
             await ctx.send(f"**Invalid response or timeout. Please try again. ({e})**")
             return
 
-        stock_amount = None
+        stock_amount = "Unlimited" if not stock_limit else None
         if stock_limit:
             # Ask for stock amount
             await ctx.send(get_value_message("stock amount"))
@@ -104,7 +104,15 @@ def make_item_command(bot, products):
                 pass
 
         with open(filename, 'a') as file:
-            file.write(f"{message_id},{channel_id},{server_id},{name},{price},{stock_limit},{stock_amount}\n")
+            stock_limit_value = "Unlimited" if not stock_limit else "Limited"
+            stock_amount_value = str(stock_amount) if stock_limit else ""
+
+            with open(filename, 'a') as file:
+                if stock_limit:  # Only write stock_amount if stock is limited
+                    file.write(
+                        f"{message_id},{channel_id},{server_id},{name},{price},{stock_limit_value},{stock_amount_value}\n")
+                else:
+                    file.write(f"{message_id},{channel_id},{server_id},{name},{price},{stock_limit_value}\n")
 
         # Send a confirmation message
         stock_info = f" with {'limited' if stock_limit else 'unlimited'} stock of {stock_amount}" if stock_limit else ""
