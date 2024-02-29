@@ -24,12 +24,24 @@ products = {}
 
 with open('products.txt', 'r') as file:
     for line in file:
-        message_id, channel_id, server_id, name, price = line.strip().split(',')
+        parts = line.strip().split(',')
+        message_id, channel_id, server_id, name, price = parts[:5]
+        stock_limit = False
+        stock_amount = None
+        if len(parts) >= 6:
+            stock_limit = parts[5].lower() == 'true'
+        if len(parts) >= 7 and parts[6].strip():  # Check if parts[6] is not empty
+            try:
+                stock_amount = int(parts[6])
+            except ValueError:
+                print(f"Invalid stock_amount value: {parts[6]}")
         products[int(message_id)] = {
             "name": name,
             "price": float(price),
             "channel_id": int(channel_id),
-            "server_id": int(server_id)
+            "server_id": int(server_id),
+            "stock_limit": stock_limit,
+            "stock_amount": stock_amount
         }
 
 add_command_if_not_exists(bot, 'clearcart', clear_cart_command(bot, user_cart_manager))

@@ -1,26 +1,29 @@
-import discord
+import asyncio
 
+import discord
 
 def purge_command(bot):
     @bot.command(name='purge')
     async def purge_messages(ctx, amount: int):
         if not ctx.author.guild_permissions.administrator:
-            await ctx.send('**Only administrators can use this command.**')
-            return
+            return await ctx.send('**Only administrators can use this command.**')
 
-        if not isinstance(amount, int):
-            await ctx.send('**Please provide a valid number.**')
-            return
+        if not 1 <= amount <= 100:
+            return await ctx.send('**Please provide a number between 1 and 100.**')
 
-        if amount < 1 or amount > 100:
-            await ctx.send('**Please provide a number between 1 and 100.**')
-            return
+        try:
+            deleted = await ctx.channel.purge(limit=amount + 1)
+        except discord.Forbidden:
+            return await ctx.send('**I do not have permission to delete messages.**')
+        except discord.HTTPException:
+            return await ctx.send('**Failed to delete messages. Please try again later.**')
 
-        deleted = await ctx.channel.purge(limit=amount + 1)
+        deleted_count = len(deleted) - 1
+        if deleted_count == 0:
+            return await ctx.send('**No messages were found to purge.**')
 
-        if len(deleted) == 1:
-            await ctx.send('**No messages were found to purge.**')
-            return
+        embed = discord.Embed(description=f'{deleted_count} messages have been purged.', color=discord.Color.green())
+        confirmation_msg = await ctx.send(embed=embed, delete_after=5)
 
-        embed = discord.Embed(description=f'{len(deleted) - 1} messages have been purged.', color=discord.Color.green())
-        await ctx.send(embed=embed, delete_after=5)
+        await asyncio.sleep(5)
+        await ctx.message.delete()
