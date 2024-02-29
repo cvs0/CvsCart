@@ -33,7 +33,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
             if str(payload.emoji) == "🛒":
                 stock_limit = product.get("stock_limit")
                 stock_amount = product.get("stock_amount")
-                if stock_limit is not None and stock_amount is not None and stock_amount <= 0 and stock_limit != "Unlimited":
+                if stock_limit is not None and stock_amount is not None and (not stock_limit or (stock_limit and int(stock_amount) <= 0)):
                     await message.remove_reaction("🛒", payload.member)
                     user = bot.get_user(user_id)
                     if user:
@@ -62,7 +62,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                 if any(item.name == product["name"] for item in cart.items):
                     cart.remove_item(product["name"], 1)
                     if product.get("stock_limit") is not None:
-                        products[payload.message_id]["stock_amount"] -= 1
+                        products[payload.message_id]["stock_amount"] += 1
 
                     await message.remove_reaction("❌", payload.member)
                     user = bot.get_user(user_id)
