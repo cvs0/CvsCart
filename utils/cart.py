@@ -1,5 +1,6 @@
 from utils.cartItem import CartItem
 
+from termcolor import colored
 
 class Cart:
     def __init__(self):
@@ -7,11 +8,11 @@ class Cart:
 
     def add_item(self, name, price, quantity):
         if not isinstance(quantity, int) or quantity <= 0:
-            print("Quantity must be a positive integer.")
+            print(colored("Quantity must be a positive integer.", "red"))
             return
 
         if not isinstance(price, (int, float)) or price <= 0:
-            print("Price must be a positive number.")
+            print(colored("Price must be a positive number.", "red"))
             return
 
         existing_item = next((item for item in self.items if item.name == name), None)
@@ -25,14 +26,14 @@ class Cart:
         existing_item = next((item for item in self.items if item.name == name), None)
         if existing_item:
             if not isinstance(quantity, int) or quantity <= 0:
-                print("Quantity must be a positive integer.")
+                print(colored("Quantity must be a positive integer.", "red"))
                 return
 
             existing_item.quantity -= quantity
             if existing_item.quantity <= 0:
                 self.items.remove(existing_item)
         else:
-            print("Item not found in cart.")
+            print(colored("Item not found in cart.", "red"))
             return
 
     def calculate_total(self):
@@ -40,7 +41,7 @@ class Cart:
             total = sum(item.price * item.quantity for item in self.items)
             return round(total, 2)
         except Exception as e:
-            print(f"Error calculating total: {e}")
+            print(colored(f"Error calculating total: {e}", "red"))
             return None
 
     def clear(self):

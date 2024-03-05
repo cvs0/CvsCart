@@ -3,6 +3,7 @@ import os
 
 import discord
 
+
 def make_item_command(bot, products):
     @bot.command(name='makeitem')
     async def make_item(ctx):
@@ -10,8 +11,8 @@ def make_item_command(bot, products):
             await ctx.send("**Only administrators can use this command.**")
             return
 
-        def check(message):
-            return message.author == ctx.author and message.channel == ctx.channel
+        def check(p_message):
+            return p_message.author == ctx.author and p_message.channel == ctx.channel
 
         def get_value_message(value_name):
             return f"**Please enter the {value_name} of the item:**"
@@ -100,7 +101,7 @@ def make_item_command(bot, products):
             try:
                 color_msg = await bot.wait_for('message', check=check, timeout=30)
                 color_value = color_msg.content
-            except (asyncio.TimeoutError):
+            except asyncio.TimeoutError:
                 await ctx.send("**Invalid color or timeout. Using default color.**")
                 color_value = None
 

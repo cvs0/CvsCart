@@ -3,6 +3,7 @@ import discord
 from config.config import paypal_email
 from utils.cartItem import CartItem
 
+from termcolor import colored
 
 async def handle_reactions(payload, user_cart_manager, products, bot):
     if payload.user_id == bot.user.id:
@@ -57,7 +58,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                                           color=0x00ff00)
                     await user.send(embed=embed)
                 else:
-                    print("User not found.")
+                    print(colored("User not found.", "red"))
             elif str(payload.emoji) == "❌":
                 if any(item.name == product["name"] for item in cart.items):
                     cart.remove_item(product["name"], 1)

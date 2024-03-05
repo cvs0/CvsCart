@@ -5,3 +5,5 @@ bot_token = os.getenv('BOT_TOKEN')
 paypal_email = "convexshop@proton.me"
 randomNumberChannel = 1210028551378837556
 reviewChannel = 1209661560562126878
+
+order_history = False

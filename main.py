@@ -17,6 +17,8 @@ from utils.events.message import handle_message
 from utils.events.reactions import handle_reactions
 from utils.userCartManager import UserCartManager
 
+from termcolor import colored
+
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
 user_cart_manager = UserCartManager()
@@ -37,7 +39,7 @@ with open('products.txt', 'r') as file:
                 try:
                     stock_amount = int(parts[6])
                 except ValueError:
-                    print(f"Invalid stock_amount value: {parts[6]}")
+                    print(colored(f"Invalid stock_amount value: {parts[6]}", "red"))
         products[int(message_id)] = {
             "name": name,
             "price": float(price),
