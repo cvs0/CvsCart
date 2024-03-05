@@ -2,6 +2,7 @@ import asyncio
 
 import discord
 
+
 def purge_command(bot):
     @bot.command(name='purge')
     async def purge_messages(ctx, amount: int):

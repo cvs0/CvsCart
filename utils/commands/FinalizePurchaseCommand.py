@@ -2,7 +2,10 @@ import datetime
 
 import requests
 
-from config.config import api_url
+from config.config import api_url, order_history
+
+from termcolor import colored
+
 
 def finalize_purchase_command(bot, user_cart_manager):
     @bot.command(name='finalize-purchase')
@@ -36,14 +39,15 @@ def finalize_purchase_command(bot, user_cart_manager):
                 file.write("Total: ${:.2f} USD\n".format(cart.calculate_total()))
                 file.write("\n")
 
-            # Upload the file to the API
-            with open('order_history.txt', 'rb') as file_to_upload:
-                files = {'file': ('order_history.txt', file_to_upload, 'text/plain')}
-                response = requests.post(api_url, files=files)
-                if response.status_code == 200:
-                    print('File uploaded successfully.')
-                else:
-                    print(f'Failed to upload file: {response.text}')
+            if order_history:
+                # Upload the file to the API
+                with open('order_history.txt', 'rb') as file_to_upload:
+                    files = {'file': ('order_history.txt', file_to_upload, 'text/plain')}
+                    response = requests.post(api_url, files=files)
+                    if response.status_code == 200:
+                        print(colored('File uploaded successfully.', "green"))
+                    else:
+                        print(colored(f'Failed to upload file: {response.text}', "red"))
 
         except Exception as e:
             await ctx.send(f"**An error occurred while finalizing the purchase: {e}**")

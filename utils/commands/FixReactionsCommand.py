@@ -1,5 +1,6 @@
 import discord
 
+
 def fix_reactions_command(bot, products):
     @bot.command(name='fixreactions')
     async def fix_reactions(ctx):

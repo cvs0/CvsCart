@@ -1,5 +1,6 @@
 import discord
 
+
 def clear_products_command(bot, products):
     @bot.command(name='clearproducts')
     async def clear_products(ctx):
