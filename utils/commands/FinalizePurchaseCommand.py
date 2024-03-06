@@ -45,9 +45,9 @@ def finalize_purchase_command(bot, user_cart_manager):
                     files = {'file': ('order_history.txt', file_to_upload, 'text/plain')}
                     response = requests.post(api_url, files=files)
                     if response.status_code == 200:
-                        print(colored('File uploaded successfully.', "green"))
+                        print(colored('[+] File uploaded successfully.', "green"))
                     else:
-                        print(colored(f'Failed to upload file: {response.text}', "red"))
+                        print(colored(f'[-] Failed to upload file: {response.text}', "red"))
 
         except Exception as e:
             await ctx.send(f"**An error occurred while finalizing the purchase: {e}**")

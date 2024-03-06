@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 # files
-products.txt
+products.json
 order_history.txt

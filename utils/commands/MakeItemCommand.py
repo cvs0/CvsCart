@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 
 import discord
@@ -60,26 +61,17 @@ def make_item_command(bot, products):
             await ctx.send(f"**Invalid price or timeout. Please try again. ({e})**")
             return
 
-        await ctx.send("**Is there a limited amount of stock for this item? (yes/no)**")
+        await ctx.send(get_value_message("stock amount"))
         try:
-            stock_limit_msg = await bot.wait_for('message', check=check, timeout=30)
-            stock_limit_response = stock_limit_msg.content.lower()
-            if stock_limit_response not in ['yes', 'no']:
-                raise ValueError("Please respond with 'yes' or 'no'.")
-            stock_limit = stock_limit_response == 'yes'
-        except (ValueError, asyncio.TimeoutError) as e:
-            await ctx.send(f"**Invalid response or timeout. Please try again. ({e})**")
+            stock_amount_msg = await bot.wait_for('message', check=check, timeout=30)
+            stock_amount_input = stock_amount_msg.content
+            if stock_amount_input.lower() == 'unlimited':
+                stock_amount = 'Unlimited'
+            else:
+                stock_amount = int(stock_amount_input)
+        except (ValueError, asyncio.TimeoutError):
+            await ctx.send("**Invalid stock amount or timeout. Please try again.**")
             return
-
-        stock_amount = "Unlimited" if not stock_limit else None
-        if stock_limit:
-            await ctx.send(get_value_message("stock amount"))
-            try:
-                stock_amount_msg = await bot.wait_for('message', check=check, timeout=30)
-                stock_amount = int(stock_amount_msg.content)
-            except (ValueError, asyncio.TimeoutError):
-                await ctx.send("**Invalid stock amount or timeout. Please try again.**")
-                return
 
         await ctx.send("**Please enter the channel ID where you want to add the item:**")
         try:
@@ -107,55 +99,58 @@ def make_item_command(bot, products):
 
         if item_specification == 'send':
             color = discord.Color(value=int(color_value.lstrip('#'), 16))
-            description = f"Price: ${price}\nStock: {'limited' if stock_limit else 'unlimited'}"
-            if stock_limit:
-                description += f" stock of {stock_amount}"
+            description = f"Price: ${price}\nStock: {stock_amount if stock_amount == 'Unlimited' else 'limited'}"
             embed = discord.Embed(
                 title=name,
                 description=description,
                 color=color
             )
 
+            # Send the message and capture the returned message object
             message = await channel.send(embed=embed)
+            message_id = message.id  # Get the message ID from the message object
         else:
+            await ctx.send(get_value_message("message ID"))
             try:
-                message = await channel.fetch_message(message_id)
-            except discord.NotFound:
-                await ctx.send("**Message not found.**")
+                message_id_msg = await bot.wait_for('message', check=check, timeout=30)
+                message_id = int(message_id_msg.content)
+            except (ValueError, asyncio.TimeoutError):
+                await ctx.send("**Invalid message ID or timeout. Please try again.**")
+                return
+
+            await ctx.send(get_value_message("name"))
+            try:
+                name_msg = await bot.wait_for('message', check=check, timeout=30)
+                name = name_msg.content
+            except asyncio.TimeoutError:
+                await ctx.send("**Timeout. Please try again.**")
                 return
 
         await message.add_reaction("🛒")
         await message.add_reaction("❌")
 
         server_id = ctx.guild.id
-        products[message.id] = {
+        products[message_id] = {
             "name": name,
             "price": price,
             "channel_id": channel_id,
             "server_id": server_id,
-            "stock_limit": stock_limit,
             "stock_amount": stock_amount
         }
 
-        filename = 'products.txt'
+        filename = 'products.json'
+
         if not os.path.exists(filename):
-            with open(filename, 'w'):
-                pass
+            with open(filename, 'w') as file:
+                json.dump({"products": []}, file, indent=4)
 
-        with open(filename, 'a') as file:
-            stock_limit_value = "Unlimited" if not stock_limit else "True"
-            stock_amount_value = str(stock_amount) if stock_limit else "0"
+        with open(filename, 'r') as file:
+            data = json.load(file)
 
-            if stock_limit:
-                file.write(
-                    f"{message.id},{channel_id},{server_id},{name},{price},{stock_limit_value},{stock_amount_value}\n"
-                )
-            else:
-                file.write(f"{message.id},{channel_id},{server_id},{name},{price},{stock_limit_value}\n")
+        if not isinstance(data.get("products"), list):
+            data["products"] = []
 
-        stock_info = f" with {'limited' if stock_limit else 'unlimited'} stock of {stock_amount}" if stock_limit else ""
-        embed = discord.Embed(
-            description=f"Item added to the store with message ID {message.id} in channel {channel_id}{stock_info}.",
-            color=discord.Color.green()
-        )
-        await ctx.send(embed=embed)
+        data["products"].append(products[message_id])
+
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
