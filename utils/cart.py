@@ -8,11 +8,11 @@ class Cart:
 
     def add_item(self, name, price, quantity):
         if not isinstance(quantity, int) or quantity <= 0:
-            print(colored("Quantity must be a positive integer.", "red"))
+            print(colored("[-] Quantity must be a positive integer.", "red"))
             return
 
         if not isinstance(price, (int, float)) or price <= 0:
-            print(colored("Price must be a positive number.", "red"))
+            print(colored("[-] Price must be a positive number.", "red"))
             return
 
         existing_item = next((item for item in self.items if item.name == name), None)
@@ -26,14 +26,14 @@ class Cart:
         existing_item = next((item for item in self.items if item.name == name), None)
         if existing_item:
             if not isinstance(quantity, int) or quantity <= 0:
-                print(colored("Quantity must be a positive integer.", "red"))
+                print(colored("[-] Quantity must be a positive integer.", "red"))
                 return
 
             existing_item.quantity -= quantity
             if existing_item.quantity <= 0:
                 self.items.remove(existing_item)
         else:
-            print(colored("Item not found in cart.", "red"))
+            print(colored("[-] Item not found in cart.", "red"))
             return
 
     def calculate_total(self):
@@ -41,7 +41,7 @@ class Cart:
             total = sum(item.price * item.quantity for item in self.items)
             return round(total, 2)
         except Exception as e:
-            print(colored(f"Error calculating total: {e}", "red"))
+            print(colored(f"[-] Error calculating total: {e}", "red"))
             return None
 
     def clear(self):
