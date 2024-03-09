@@ -1,5 +1,7 @@
 import datetime
 
+from discord.ext.commands import MissingRequiredArgument
+
 import requests
 
 from config.config import api_url, order_history
@@ -60,5 +62,10 @@ def finalize_purchase_command(bot, user_cart_manager):
             return
 
         await ctx.send(f"**The purchase has been finalized.**")
+
+    @finalize_purchase.error
+    async def finalize_purchase_error(ctx, error):
+        if isinstance(error, MissingRequiredArgument):
+            await ctx.send('**Please provide a valid PayPal email.**')
 
     return finalize_purchase
