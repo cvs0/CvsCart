@@ -17,6 +17,7 @@ def cart_command(bot, user_cart_manager):
         embed = discord.Embed(title="Your Cart", color=0x0000ff)
 
         for item in cart.items:
-            embed.add_field(name=item.name, value=f"Price: ${item.price} USD | Quantity: {item.quantity}", inline=False)
+            embed.add_field(name=item.name, value=f"Price: ${item.price} USD | Quantity: {item.quantity}",
+                            inline=False)
         embed.add_field(name="Total", value=f"Total: ${total} USD", inline=False)
         message = await ctx.send(embed=embed)

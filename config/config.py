@@ -12,3 +12,4 @@ reviewChannel = 1209661560562126878
 # Configuration flags
 debug = False
 order_history = False
+save_carts = False

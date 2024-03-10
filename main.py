@@ -17,7 +17,6 @@ from utils.events.message import handle_message
 from utils.events.reactions import handle_reactions
 from utils.userCartManager import UserCartManager
 import json
-from termcolor import colored
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -56,17 +55,19 @@ add_command_if_not_exists(bot, 'finalize-purchase', finalize_purchase_command(bo
 add_command_if_not_exists(bot, 'bothelp', bot_help_command(bot))
 add_command_if_not_exists(bot, 'setstatus', set_status_command(bot))
 
-
 @bot.event
 async def on_guild_channel_create(channel):
     await handle_guild_channel_create(bot, user_cart_manager, channel)
+
 
 @bot.event
 async def on_message(message):
     await handle_message(bot, message, reviewChannel, randomNumberChannel)
 
+
 @bot.event
 async def on_raw_reaction_add(payload):
     await handle_reactions(payload, user_cart_manager, products, bot)
+
 
 bot.run(bot_token)
