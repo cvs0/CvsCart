@@ -1,5 +1,5 @@
 import discord
-from config.config import , debug
+from config.config import , debug, save_carts
 from utils.cartItem import CartItem
 from termcolor import colored
 
@@ -23,7 +23,9 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
         total = cart.calculate_total()
         embed = discord.Embed(
             title="Payment",
-            description=f"Please send ${total} USD to the following email address:\n\n{}\n\nMake sure to use the 'Send money to friends and family' option.\n\nDon't forget to include your email associated with your payment account below.",
+            description=f"Please send ${total} USD to the following email address:\n\n{}\n\nMake "
+                        f"sure to use the 'Send money to friends and family' option.\n\nDon't forget to include your "
+                        f"email associated with your payment account below.",
             color=0x00ff00
         )
         await channel.send(embed=embed)
@@ -87,6 +89,9 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                     )
                     await user.send(embed=embed)
 
+                    if save_carts:
+                        user_cart_manager.export_carts("data/carts.json")
+
                     if debug:
                         print(colored("[D] Item added to cart", "yellow"))
                 else:
@@ -112,6 +117,9 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                             color=0x00ff00
                         )
                         await user.send(embed=embed)
+
+                        if save_carts:
+                            user_cart_manager.export_carts("data/carts.json")
 
                         if debug:
                             print(colored("[D] Item removed from cart", "yellow"))
