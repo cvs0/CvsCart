@@ -72,8 +72,8 @@ class UserCartManager:
                     print(colored(f"[+] Added item '{name}' to cart for user {user_id} with price ${price} and quantity {quantity}"), "green")
 
         if debug:
-            print("Current user carts after import:")
+            print(colored("Current user carts after import:", "yellow"))
             for user_id, cart in self.user_carts.items():
-                print(f"User ID: {user_id}")
+                print(colored(f"User ID: {user_id}", "yellow"))
                 for item in cart.items:
-                    print(f"Item: {item.name}, Price: {item.price}, Quantity: {item.quantity}")
+                    print(colored(f"Item: {item.name}, Price: {item.price}, Quantity: {item.quantity}", "yellow"))
