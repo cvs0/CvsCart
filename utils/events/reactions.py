@@ -4,6 +4,12 @@ from utils.cartItem import CartItem
 from termcolor import colored
 
 
+def update_embed_stock(message, stock_amount):
+    embed = message.embeds[0]
+    embed.description = f"Price: ${embed.description.splitlines()[0].split(': ')[1]}\nStock: {stock_amount}"
+    return embed
+
+
 async def handle_reactions(payload, user_cart_manager, products, bot):
     if payload.user_id == bot.user.id:
         return
@@ -76,6 +82,8 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                 cart.add_item(product["name"], product["price"], 1)
                 if stock_amount != 'Unlimited':
                     products[payload.message_id]["stock_amount"] -= 1
+                    embed = update_embed_stock(message, stock_amount)
+                    await message.edit(embed=embed)
 
                 await message.remove_reaction("🛒", payload.member)
                 user = bot.get_user(user_id)
@@ -102,15 +110,17 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
 
                 if any(item.name == product["name"] for item in cart.items):
                     cart.remove_item(product["name"], 1)
-                    stock_amount = product.get("stock_amount")
-                    if stock_amount != 'Unlimited':
+                    if product.get("stock_amount") != 'Unlimited':
+                        stock_amount_display = "Unlimited" if product.get("stock_amount") is None else product.get("stock_amount")
                         products[payload.message_id]["stock_amount"] += 1
+                        embed = update_embed_stock(message, product.get("stock_amount"))
+                        await message.edit(embed=embed)
 
                     await message.remove_reaction("❌", payload.member)
                     user = bot.get_user(user_id)
                     if user:
                         cart_item = CartItem(product["name"], product["price"], 1)
-                        stock_amount_display = "Unlimited" if stock_amount is None else stock_amount
+                        stock_amount_display = "Unlimited" if product.get("stock_amount") is None else product.get("stock_amount")
                         embed = discord.Embed(
                             title="Item Removed From Cart",
                             description=f"**{cart_item.name}**\nPrice: ${cart_item.price:.2f} USD\nQuantity: {cart_item.quantity}\nStock: {stock_amount_display}",
