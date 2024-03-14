@@ -131,10 +131,11 @@ def make_item_command(bot, products):
 
         server_id = ctx.guild.id
         products[message_id] = {
-            "name": name,
-            "price": price,
+            "message_id": message_id,
             "channel_id": channel_id,
             "server_id": server_id,
+            "name": name,
+            "price": price,
             "stock_amount": stock_amount
         }
 
