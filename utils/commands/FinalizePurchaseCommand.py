@@ -4,7 +4,7 @@ from discord.ext.commands import MissingRequiredArgument
 
 import requests
 
-from config.config import api_url, order_history, order_history_path, ratingsChannel
+from config.config import api_url, order_history, order_history_path, ratingsChannel, ratings
 
 from termcolor import colored
 
@@ -13,7 +13,14 @@ async def send_rating_message(p_user_id, p_channel_id, bot):
     user = await bot.fetch_user(p_user_id)
     channel = bot.get_channel(p_channel_id)
 
-    rating_message = await user.send(f"Please rate the service: 1️⃣, 2️⃣, 3️⃣, 4️⃣, or 5️⃣ for excellent")
+    rating_message = await user.send(
+        "Please rate the service: "
+        "1️⃣ for very bad, "
+        "2️⃣ for bad, "
+        "3️⃣ for neutral, "
+        "4️⃣ for good, "
+        "5️⃣ for excellent."
+    )
 
     for emoji in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣']:
         await rating_message.add_reaction(emoji)
@@ -43,7 +50,8 @@ def finalize_purchase_command(bot, user_cart_manager):
             await ctx.send('**User not found.**')
             return
 
-        await send_rating_message(user_id, ratingsChannel, bot)
+        if ratings:
+            await send_rating_message(user_id, ratingsChannel, bot)
 
         cart = user_cart_manager.get_cart(user_id)
 

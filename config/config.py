@@ -19,3 +19,4 @@ carts_path = "data/carts.json"
 debug = False
 order_history = False
 save_carts = False
+ratings = True
