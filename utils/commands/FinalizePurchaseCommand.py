@@ -4,7 +4,7 @@ from discord.ext.commands import MissingRequiredArgument
 
 import requests
 
-from config.config import api_url, order_history
+from config.config import api_url, order_history, order_history_path
 
 from termcolor import colored
 
@@ -31,7 +31,7 @@ def finalize_purchase_command(bot, user_cart_manager):
         formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
         try:
-            with open('order_history.txt', 'a+') as file:
+            with open(order_history_path, 'a+') as file:
                 file.write(f"Date: {formatted_datetime}\n")
                 file.write(f"User ID: {user_id}, Username: {user.name}\n")
                 file.write(f"Users PayPal: {customer_paypal_email}\n")
@@ -43,8 +43,8 @@ def finalize_purchase_command(bot, user_cart_manager):
 
             if order_history:
                 # Upload the file to the API
-                with open('order_history.txt', 'rb') as file_to_upload:
-                    files = {'file': ('order_history.txt', file_to_upload, 'text/plain')}
+                with open(order_history_path, 'rb') as file_to_upload:
+                    files = {'file': (order_history_path, file_to_upload, 'text/plain')}
                     response = requests.post(api_url, files=files)
                     if response.status_code == 200:
                         print(colored('[+] File uploaded successfully.', "green"))

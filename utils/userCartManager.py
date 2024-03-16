@@ -1,4 +1,4 @@
-from config.config import save_carts, debug
+from config.config import save_carts, debug, carts_path
 from utils.cart import Cart
 import json
 from termcolor import colored
@@ -8,7 +8,7 @@ class UserCartManager:
         self.user_carts = {}
 
         if save_carts:
-            self.import_carts("data/carts.json")
+            self.import_carts(carts_path)
 
     def get_cart(self, user_id):
         if not isinstance(user_id, (int, str)):

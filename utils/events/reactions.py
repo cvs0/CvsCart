@@ -1,12 +1,13 @@
 import discord
-from config.config import paypal_email, debug, save_carts
+from config.config import paypal_email, debug, save_carts, carts_path
 from utils.cartItem import CartItem
 from termcolor import colored
 
 
 def update_embed_stock(message, stock_amount):
     embed = message.embeds[0]
-    embed.description = f"Price: ${embed.description.splitlines()[0].split(': ')[1]}\nStock: {stock_amount}"
+    price_line = embed.description.splitlines()[0]
+    embed.description = f"{price_line}\nStock: {stock_amount}"
     return embed
 
 
@@ -98,7 +99,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                     await user.send(embed=embed)
 
                     if save_carts:
-                        user_cart_manager.export_carts("data/carts.json")
+                        user_cart_manager.export_carts(carts_path)
 
                     if debug:
                         print(colored("[D] Item added to cart", "yellow"))
@@ -129,7 +130,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                         await user.send(embed=embed)
 
                         if save_carts:
-                            user_cart_manager.export_carts("data/carts.json")
+                            user_cart_manager.export_carts(carts_path)
 
                         if debug:
                             print(colored("[D] Item removed from cart", "yellow"))
