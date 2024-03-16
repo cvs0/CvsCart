@@ -8,6 +8,7 @@ bot_token = os.getenv('BOT_TOKEN')
 paypal_email = "convexshop@proton.me"
 randomNumberChannel = 1210028551378837556
 reviewChannel = 1209661560562126878
+ratingsChannel = 1218379961392562282
 
 # Data paths
 order_history_path = "data/order_history.txt"

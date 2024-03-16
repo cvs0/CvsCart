@@ -4,10 +4,26 @@ from discord.ext.commands import MissingRequiredArgument
 
 import requests
 
-from config.config import api_url, order_history, order_history_path
+from config.config import api_url, order_history, order_history_path, ratingsChannel
 
 from termcolor import colored
 
+async def send_rating_message(p_user_id, p_channel_id, bot):
+    user = await bot.fetch_user(p_user_id)
+    channel = bot.get_channel(p_channel_id)
+
+    rating_message = await user.send(f"Please rate the service: 1️⃣, 2️⃣, 3️⃣, 4️⃣, or 5️⃣ for excellent")
+
+    for emoji in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣']:
+        await rating_message.add_reaction(emoji)
+
+    def check(p_reaction, reacting_user):
+        return reacting_user == user and str(p_reaction.emoji) in ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣']
+
+    reaction, _ = await bot.wait_for('reaction_add', check=check)
+
+    await rating_message.delete()
+    await channel.send(f"Rating: {reaction.emoji} from {user.mention}")
 
 def finalize_purchase_command(bot, user_cart_manager):
     @bot.command(name='finalize-purchase')
@@ -24,6 +40,8 @@ def finalize_purchase_command(bot, user_cart_manager):
         if not user:
             await ctx.send('**User not found.**')
             return
+
+        await send_rating_message(user_id, ratingsChannel, bot)
 
         cart = user_cart_manager.get_cart(user_id)
 
