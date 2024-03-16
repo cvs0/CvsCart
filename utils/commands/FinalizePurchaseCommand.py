@@ -8,6 +8,7 @@ from config.config import api_url, order_history, order_history_path, ratingsCha
 
 from termcolor import colored
 
+
 async def send_rating_message(p_user_id, p_channel_id, bot):
     user = await bot.fetch_user(p_user_id)
     channel = bot.get_channel(p_channel_id)
@@ -24,6 +25,7 @@ async def send_rating_message(p_user_id, p_channel_id, bot):
 
     await rating_message.delete()
     await channel.send(f"Rating: {reaction.emoji} from {user.mention}")
+
 
 def finalize_purchase_command(bot, user_cart_manager):
     @bot.command(name='finalize-purchase')

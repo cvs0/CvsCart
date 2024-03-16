@@ -64,7 +64,7 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                 if debug:
                     print(colored("[D] Adding item to cart...", "yellow"))
 
-                stock_amount = product.get("stock_amount")
+                stock_amount = products[payload.message_id].get("stock_amount")
                 if stock_amount != 'Unlimited' and (stock_amount is None or int(stock_amount) <= 0):
                     await message.remove_reaction("🛒", payload.member)
                     user = bot.get_user(user_id)
@@ -82,8 +82,9 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
 
                 cart.add_item(product["name"], product["price"], 1)
                 if stock_amount != 'Unlimited':
-                    products[payload.message_id]["stock_amount"] -= 1
-                    embed = update_embed_stock(message, stock_amount)
+                    products[payload.message_id]["stock_amount"] = str(int(stock_amount) - 1)  # Update stock amount
+                    embed = update_embed_stock(message, products[payload.message_id][
+                        "stock_amount"])  # Pass updated stock amount
                     await message.edit(embed=embed)
 
                 await message.remove_reaction("🛒", payload.member)
@@ -112,9 +113,12 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
                 if any(item.name == product["name"] for item in cart.items):
                     cart.remove_item(product["name"], 1)
                     if product.get("stock_amount") != 'Unlimited':
-                        stock_amount_display = "Unlimited" if product.get("stock_amount") is None else product.get("stock_amount")
-                        products[payload.message_id]["stock_amount"] += 1
-                        embed = update_embed_stock(message, product.get("stock_amount"))
+                        stock_amount_display = "Unlimited" if product.get("stock_amount") is None else product.get(
+                            "stock_amount")
+                        products[payload.message_id]["stock_amount"] = str(
+                            int(products[payload.message_id]["stock_amount"]) + 1)  # Update stock amount
+                        embed = update_embed_stock(message, products[payload.message_id][
+                            "stock_amount"])  # Pass updated stock amount
                         await message.edit(embed=embed)
 
                     await message.remove_reaction("❌", payload.member)
