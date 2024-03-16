@@ -4,6 +4,8 @@ import os
 
 import discord
 
+from config.config import products_path
+
 
 def make_item_command(bot, products):
     @bot.command(name='makeitem')
@@ -139,7 +141,7 @@ def make_item_command(bot, products):
             "stock_amount": stock_amount
         }
 
-        filename = 'products.json'
+        filename = products_path
 
         if not os.path.exists(filename):
             with open(filename, 'w') as file:

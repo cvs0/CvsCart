@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
 
-from config.config import bot_token, reviewChannel, randomNumberChannel
+from config.config import bot_token, reviewChannel, randomNumberChannel, products_path
 from utils.CommandUtils import add_command_if_not_exists
+from utils.commands.AddStockCommand import add_stock_command
 from utils.commands.BotHelpCommand import bot_help_command
 from utils.commands.CartCommand import cart_command
 from utils.commands.ClearCartCommand import clear_cart_command
@@ -23,7 +24,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 user_cart_manager = UserCartManager()
 
 # Assuming 'products_data' is loaded correctly from the JSON file
-with open('products.json', 'r') as file:
+with open(products_path, 'r') as file:
     products_data = json.load(file)['products']
 
 products = {}
@@ -54,6 +55,7 @@ add_command_if_not_exists(bot, 'purge', purge_command(bot))
 add_command_if_not_exists(bot, 'finalize-purchase', finalize_purchase_command(bot, user_cart_manager))
 add_command_if_not_exists(bot, 'bothelp', bot_help_command(bot))
 add_command_if_not_exists(bot, 'setstatus', set_status_command(bot))
+add_command_if_not_exists(bot, 'add-stock', add_stock_command(bot))
 
 @bot.event
 async def on_guild_channel_create(channel):
