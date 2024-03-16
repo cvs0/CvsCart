@@ -57,6 +57,7 @@ add_command_if_not_exists(bot, 'bothelp', bot_help_command(bot))
 add_command_if_not_exists(bot, 'setstatus', set_status_command(bot))
 add_command_if_not_exists(bot, 'add-stock', add_stock_command(bot))
 
+
 @bot.event
 async def on_guild_channel_create(channel):
     await handle_guild_channel_create(bot, user_cart_manager, channel)
