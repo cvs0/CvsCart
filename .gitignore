@@ -162,3 +162,5 @@ cython_debug/
 # files
 data/products.json
 data/order_history.txt
+data/carts.json
+data/user_reputations.json
