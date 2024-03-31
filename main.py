@@ -1,7 +1,10 @@
+import asyncio
+
 import discord
 from discord.ext import commands
+from termcolor import colored
 
-from config.config import bot_token, reviewChannel, randomNumberChannel, products_path
+from config.config import bot_token, reviewChannel, randomNumberChannel, products_path, marketplaceChannel
 from utils.CommandUtils import add_command_if_not_exists
 from utils.commands.AddStockCommand import add_stock_command
 from utils.commands.BotHelpCommand import bot_help_command
@@ -71,6 +74,28 @@ async def on_message(message):
 @bot.event
 async def on_raw_reaction_add(payload):
     await handle_reactions(payload, user_cart_manager, products, bot)
+
+
+async def send_marketplace_safety_msg():
+    while True:
+        channel = bot.get_channel(marketplaceChannel)
+        embed = discord.Embed(
+            title="Marketplace Guidelines",
+            description=(
+                "Messages in the marketplace must start with one of the following tags: "
+                "[WTB] (wants to buy), [WTS] (wants to sell), or [WTT] (wants to trade).\n\n"
+                "Scamming is not tolerated."
+            ),
+            color=discord.Color.blue()
+        )
+        await channel.send(embed=embed)
+        await asyncio.sleep(900)  # 15 minutes in seconds
+
+
+@bot.event
+async def on_ready():
+    print(colored("Bot ready", "green"))
+    await send_marketplace_safety_msg()
 
 
 bot.run(bot_token)
