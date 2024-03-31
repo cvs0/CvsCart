@@ -5,12 +5,12 @@ api_url = os.getenv('API_URL')
 bot_token = os.getenv('BOT_TOKEN')
 
 # Fixed values
-paypal_email = "convexshop@proton.me"
-randomNumberChannel = 1210028551378837556
-reviewChannel = 1209661560562126878
-ratingsChannel = 1218379961392562282
-marketplaceChannel = 1219835017526775958
-marketplaceRepChannel = 1219835432632582165
+paypal_email = "cvs0_main@proton.me"
+randomNumberChannel = 1221152330699767808
+reviewChannel = 1221152392427601940
+ratingsChannel = 1221152588926423130
+marketplaceChannel = 1221151839504961686
+marketplaceRepChannel = 1221151819896459396
 
 # Data paths
 order_history_path = "data/order_history.txt"
