@@ -3,6 +3,7 @@ import os
 # Environment variables
 api_url = os.getenv('API_URL')
 bot_token = os.getenv('BOT_TOKEN')
+payment_email = os.getenv('PAYMENT_EMAIL')
 
 # Fixed values
 

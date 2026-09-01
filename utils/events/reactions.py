@@ -1,5 +1,5 @@
 import discord
-from config.config import , debug, save_carts, carts_path
+from config.config import payment_email, debug, save_carts, carts_path
 from utils.cartItem import CartItem
 from termcolor import colored
 
@@ -30,9 +30,8 @@ async def handle_reactions(payload, user_cart_manager, products, bot):
         total = cart.calculate_total()
         embed = discord.Embed(
             title="Payment",
-            description=f"Please send ${total} USD to the following email address:\n\n{}\n\nMake "
-                        f"sure to use the 'Send money to friends and family' option.\n\nDon't forget to include your "
-                        f"email associated with your payment account below.",
+            description=f"Please send ${total} USD to the following email address:\n\n{payment_email}\n\n"
+                        f"Don't forget to include your email associated with your payment account below.",
             color=0x00ff00
         )
         await channel.send(embed=embed)
